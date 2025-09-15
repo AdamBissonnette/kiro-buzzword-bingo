@@ -1,0 +1,259 @@
+.cardVariants {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Section */
+.variantsHeader {
+  padding: 20px 20px 0 20px;
+  text-align: center;
+}
+
+.variantsTitle {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.variantsSubtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+/* Loading States */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loadingText {
+  margin: 16px 0 0 0;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.progressBar {
+  width: 200px;
+  height: 4px;
+  background-color: var(--bg-secondary);
+  border-radius: 2px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--accent-color, #007bff);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Error States */
+.errorContainer {
+  padding: 20px;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Enhanced Horizontal Scroll Container */
+.horizontalScrollContainer {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  /* Enable momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+  /* Focus styles for keyboard navigation */
+  outline: none;
+}
+
+.horizontalScrollContainer:focus {
+  box-shadow: inset 0 0 0 2px var(--accent-color, #007bff);
+}
+
+.horizontalScrollContainer::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontalScrollContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.horizontalScrollContainer::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+
+.horizontalScrollContainer::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-secondary);
+}
+
+/* Horizontal row layout for multiple cards */
+.variantsRow {
+  display: flex;
+  gap: 24px;
+  padding: 20px;
+  min-height: 100%;
+}
+
+.variantWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  /* Ensure consistent card sizing */
+  min-width: 300px;
+  max-width: 350px;
+}
+
+.variantHeader {
+  margin-bottom: 15px;
+  padding: 8px 16px;
+  background-color: var(--bg-secondary);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.variantNumber {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.variantCardWrapper {
+  /* Ensure proper card display */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .variantsHeader {
+    padding: 15px 15px 0 15px;
+  }
+
+  .variantsTitle {
+    font-size: 20px;
+  }
+
+  .variantsRow {
+    padding: 15px;
+    gap: 20px;
+  }
+
+  .variantWrapper {
+    min-width: 280px;
+    max-width: 320px;
+  }
+
+  .loadingContainer,
+  .emptyState {
+    padding: 45px 15px;
+  }
+
+  .errorContainer {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .variantsHeader {
+    padding: 10px 10px 0 10px;
+  }
+
+  .variantsTitle {
+    font-size: 18px;
+  }
+
+  .variantsRow {
+    padding: 10px;
+    gap: 16px;
+  }
+
+  .variantWrapper {
+    min-width: 260px;
+    max-width: 300px;
+  }
+
+  .variantHeader {
+    padding: 6px 12px;
+    margin-bottom: 12px;
+  }
+
+  .variantNumber {
+    font-size: 13px;
+  }
+
+  .loadingContainer,
+  .emptyState {
+    padding: 30px 10px;
+  }
+
+  .errorContainer {
+    padding: 10px;
+  }
+
+  .progressBar {
+    width: 150px;
+  }
+}
+
+/* Focus styles for accessibility */
+.variantWrapper:focus-within {
+  outline: 2px solid var(--accent-color, #007bff);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Ensure proper touch targets on mobile */
+@media (pointer: coarse) {
+  .variantWrapper {
+    min-height: 44px; /* Minimum touch target size */
+  }
+}
+
+/* Card placeholder for lazy loading */
+.cardPlaceholder {
+  width: 300px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  opacity: 0.6;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

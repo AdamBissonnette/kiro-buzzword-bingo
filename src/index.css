@@ -1,0 +1,124 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #ffffff;
+  --text-primary: #213547;
+  --text-secondary: #666666;
+  --text-muted: #888888;
+  --border-color: #dee2e6;
+  --border-focus: #007bff;
+  --input-bg: #ffffff;
+  --input-text: #213547;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-card: #2d2d2d;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.4);
+  --border-color: #404040;
+  --border-focus: #646cff;
+  --input-bg: #2d2d2d;
+  --input-text: rgba(255, 255, 255, 0.87);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+a {
+  font-weight: 500;
+  color: var(--border-focus);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--text-primary);
+}
+
+html, body, #root {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  color: inherit;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+button:hover {
+  border-color: var(--border-focus);
+  background-color: var(--border-color);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Print styles for black and white export */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  [data-card-element] {
+    background: white !important;
+    border-color: black !important;
+  }
+  
+  [data-card-element] .square {
+    background: white !important;
+    color: black !important;
+    border-color: black !important;
+  }
+  
+  [data-card-element] .freeSpace {
+    background: #f0f0f0 !important;
+    color: black !important;
+  }
+}

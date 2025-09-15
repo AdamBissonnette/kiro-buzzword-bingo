@@ -1,0 +1,88 @@
+.errorBoundary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 2rem;
+}
+
+.errorContainer {
+  max-width: 500px;
+  text-align: center;
+  padding: 2rem;
+  border: 1px solid #dc3545;
+  border-radius: 8px;
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.errorTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.errorMessage {
+  margin: 0 0 2rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.errorActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.retryButton,
+.reloadButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.retryButton {
+  background-color: #007bff;
+  color: white;
+}
+
+.retryButton:hover {
+  background-color: #0056b3;
+}
+
+.reloadButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.reloadButton:hover {
+  background-color: #545b62;
+}
+
+.errorDetails {
+  text-align: left;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f1f3f4;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.errorStack {
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  color: #495057;
+}

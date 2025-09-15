@@ -1,0 +1,111 @@
+.errorMessage {
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid;
+}
+
+.errorMessage.error {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.errorMessage.warning {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.errorMessage.info {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.errorHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.errorIcon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.errorText {
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.dismissButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.5rem;
+  color: inherit;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.dismissButton:hover {
+  opacity: 1;
+}
+
+.errorDetails {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.errorDetails p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.errorActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.retryButton,
+.dismissActionButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryButton {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.retryButton:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.dismissActionButton {
+  background-color: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.dismissActionButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
