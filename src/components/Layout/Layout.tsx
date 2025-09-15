@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/hooks';
+import { DabberColorPicker } from '../DabberColorPicker';
 import styles from './Layout.module.css';
 
 interface LayoutProps {
@@ -70,6 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 🔄 Remix This Card
               </button>
             )} */}
+            <DabberColorPicker />
             <button
               onClick={toggleTheme}
               className={styles.themeToggle}

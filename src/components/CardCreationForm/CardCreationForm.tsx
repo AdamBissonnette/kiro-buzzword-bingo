@@ -40,6 +40,15 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
     setFreeSpaceIcon(initialData.freeSpaceIcon || 'star');
   }, [initialData]);
 
+  // Clear form fields
+  const clearForm = useCallback(() => {
+    setTitle('');
+    setTerms('');
+    setFreeSpaceImage('');
+    setFreeSpaceIcon('star');
+    setErrors({});
+  }, []);
+
   // Performance monitoring in development
   const { startMeasure } = usePerformanceMonitor('CardCreationForm');
   useRenderTracker('CardCreationForm', {
@@ -214,11 +223,11 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
             </span>
           )}
           <div id="terms-helper" className={styles.helperText}>
-            Enter one term per line. You need at least 24 unique terms to create a 5x5 bingo card (center square is FREE).
+            Enter one term per line. You need at least 24 unique terms to create a 5x5 bingo card (since center square is FREE but more is better).
           </div>
         </div>
 
-        {/* Free Space Image URL */}
+        {/* Free Space Image URL
         <div className={styles.formGroup}>
           <label htmlFor="free-space-image" className={styles.label}>
             Free Space Image URL (Optional)
@@ -241,7 +250,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
           <div id="image-helper" className={styles.helperText}>
             Optional: Add a custom image for the center "FREE" space. If no image is provided, an icon will be used instead.
           </div>
-        </div>
+        </div> */}
 
         {/* Free Space Icon Selector */}
         {!freeSpaceImage.trim() && (
@@ -255,6 +264,10 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
             </div>
           </div>
         )}
+
+        <button type="button" className={styles.clearButton} onClick={clearForm}>
+          Clear Card
+        </button>
       </form>
     </div>
   );

@@ -10,6 +10,7 @@ import MainContent from './components/MainContent'
 import { ControlsSidebar } from './components/ControlsSidebar'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { CardProvider } from './contexts/CardContext'
+import { DabberColorProvider } from './contexts/DabberColorContext'
 import { getCardDataFromUrl } from './utils/urlEncoder'
 import { useErrorHandler } from './hooks/useErrorHandler'
 import { useCardState } from './hooks/useCardState'
@@ -314,11 +315,13 @@ MainApp.displayName = 'MainApp';
 const App = React.memo(() => {
   return (
     <ThemeProvider>
-      <CardProvider>
-        <ErrorBoundary>
-          <MainApp />
-        </ErrorBoundary>
-      </CardProvider>
+      <DabberColorProvider>
+        <CardProvider>
+          <ErrorBoundary>
+            <MainApp />
+          </ErrorBoundary>
+        </CardProvider>
+      </DabberColorProvider>
     </ThemeProvider>
   )
 });

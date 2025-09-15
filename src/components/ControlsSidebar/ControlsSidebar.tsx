@@ -107,25 +107,6 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
   //   setActiveTab('create');
   // }, [clearCard, setEditingMode]);
 
-  const handleClearCard = useCallback(() => {
-    // Create a new empty card with default values
-    const defaultCard: CardData = {
-      id: crypto.randomUUID(),
-      title: '',
-      terms: [],
-      freeSpaceImage: '',
-      freeSpaceIcon: 'star',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    
-    // Update the card data with default values
-    onCardDataChange(defaultCard);
-    
-    // Set editing mode to true so user can start creating
-    setEditingMode(true);
-  }, [onCardDataChange, setEditingMode]);
-
   const handleEditCurrentCard = useCallback(() => {
     if (cardData) {
       onCardDataChange(cardData);
@@ -188,30 +169,12 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
           />
           
           <div className={styles.createActions}>
-            {isEditing && (
-              <button
-                onClick={() => {
-                  setEditingMode(false);
-                  setActiveTab('manage');
-                }}
-                className={`${styles.button} ${styles.buttonSecondary}`}
-              >
-                Cancel
-              </button>
-            )}
             <button
               onClick={handleCreateCard}
               disabled={!isFormValid}
               className={`${styles.button} ${styles.buttonPrimary} ${!isFormValid ? styles.buttonDisabled : ''}`}
             >
               Update Card
-              {/* {isEditing ? 'Update Card' : 'Create Card'} */}
-            </button>
-            <button
-              onClick={handleClearCard}
-              className={`${styles.button} ${styles.buttonDanger}`}
-            >
-              Clear Card
               {/* {isEditing ? 'Update Card' : 'Create Card'} */}
             </button>
           </div>
