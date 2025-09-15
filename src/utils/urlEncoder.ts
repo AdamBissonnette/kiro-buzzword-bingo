@@ -31,10 +31,18 @@ export function encodeCardData(cardData: CardData): string {
     if (jsonString.length > 8000) { // Conservative limit for URL length
       throw new Error('Card data too large for URL sharing');
     }
-    console.log(jsonString)
     
-    // Use btoa for base64 encoding and make it URL-safe
-    const base64 = btoa(jsonString);
+    // Use TextEncoder to handle Unicode characters properly, then base64 encode
+    const encoder = new TextEncoder();
+    const uint8Array = encoder.encode(jsonString);
+    
+    // Convert Uint8Array to binary string for btoa
+    let binaryString = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    
+    const base64 = btoa(binaryString);
     return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   } catch (error) {
     throw AppErrorHandler.handleURLError(error);
@@ -95,31 +103,71 @@ export function decodeCardData(encodedData: string): CardData {
 }
 
 /**
- * Generates a shareable URL for the given card data
+ * Result type for safe URL generation
  */
-export function generateShareableUrl(cardData: CardData): string {
+export interface ShareUrlResult {
+  success: boolean;
+  url?: string;
+  warning?: string;
+  error?: string;
+}
+
+/**
+ * Safely generates a shareable URL for the given card data without throwing errors
+ */
+export function generateShareableUrlSafe(cardData: CardData): ShareUrlResult {
   try {
     const encodedData = encodeCardData(cardData);
     const baseUrl = window.location.origin + window.location.pathname;
     const shareUrl = `${baseUrl}?play=true&data=${encodedData}`;
     
-    // Validate URL length
-    if (shareUrl.length > 2000) { // Most browsers support at least 2000 chars
-      throw new Error('Generated URL is too long for reliable sharing');
+    // Check URL length and provide warnings
+    if (shareUrl.length > 2000) {
+      return {
+        success: true,
+        url: shareUrl,
+        warning: 'This card is quite large and may not work reliably in all browsers. Try at your own risk!'
+      };
     }
     
-    return shareUrl;
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('too large')) {
-      throw AppErrorHandler.createError(
-        'URL_PARSING_ERROR',
-        'Card data too large for URL sharing',
-        'This card has too many terms or too much text to share via URL. Consider reducing the number of terms.',
-        false
-      );
+    if (shareUrl.length > 1500) {
+      return {
+        success: true,
+        url: shareUrl,
+        warning: 'This card is getting large. Some browsers may have issues with very long URLs.'
+      };
     }
-    throw error; // Re-throw other errors as-is
+    
+    return {
+      success: true,
+      url: shareUrl
+    };
+  } catch (error) {
+    if (error instanceof Error && (error.message.includes('too large') || error.message.includes('too long'))) {
+      return {
+        success: false,
+        error: 'This card is too large to share via URL. Consider reducing the number of terms or shortening the text.'
+      };
+    }
+    
+    return {
+      success: false,
+      error: `Failed to generate share URL: ${error instanceof Error ? error.message : 'Unknown error'}`
+    };
   }
+}
+
+/**
+ * Generates a shareable URL for the given card data (legacy function - throws errors)
+ */
+export function generateShareableUrl(cardData: CardData): string {
+  const result = generateShareableUrlSafe(cardData);
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to generate share URL');
+  }
+  
+  return result.url!;
 }
 
 /**

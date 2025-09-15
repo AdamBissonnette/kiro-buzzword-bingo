@@ -162,10 +162,42 @@
   gap: 4px;
 }
 
-.errorMessage {
-  color: #dc3545;
+.warningMessage {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+  padding: 12px;
+  border-radius: 4px;
   font-size: 14px;
-  margin-top: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.warningIcon {
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.errorMessage {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.errorIcon {
+  flex-shrink: 0;
+  font-size: 16px;
 }
 
 /* Removed dark mode media queries - now using CSS variables */

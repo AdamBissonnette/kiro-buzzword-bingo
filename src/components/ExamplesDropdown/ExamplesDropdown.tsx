@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { exampleCards, exampleCardCategories } from '../../data/exampleCards';
+import { exampleCards } from '../../data/exampleCards';
 import type { ExampleCard, ExampleCardCategory } from '../../data/exampleCards';
 import styles from './ExamplesDropdown.module.css';
 
 export const ExamplesDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<ExampleCardCategory>('All');
+  const [selectedCategory, ] = useState<ExampleCardCategory>('All');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -111,7 +111,7 @@ export const ExamplesDropdown: React.FC = () => {
           </div>
 
           {/* Category Filter */}
-          <div className={styles.categoryFilter}>
+          {/* <div className={styles.categoryFilter}>
             <div className={styles.categoryTabs}>
               {exampleCardCategories.map((category) => (
                 <button
@@ -127,7 +127,7 @@ export const ExamplesDropdown: React.FC = () => {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
           
           {/* Examples List */}
           <div className={styles.examplesList}>

@@ -19,8 +19,6 @@ export const Layout: React.FC<LayoutProps> = ({
   children, 
   sidebar, 
   showSidebar = false,
-  onRemixCard,
-  showRemixButton = false,
   isPlayMode = false,
   onCreateNew
 }) => {

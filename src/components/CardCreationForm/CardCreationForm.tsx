@@ -219,7 +219,8 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
             </span>
           )}
           <div id="terms-helper" className={styles.helperText}>
-            Enter one term per line. You need at least 24 unique terms to create a 5x5 bingo card (since center square is FREE but more is better).
+            Enter one term per line. You need at least 24 unique terms to create a 5x5 bingo card (since center square is FREE but more is better).<br />
+            Too many terms or emojis might break the sharing functionality - idealy aim for a max of 50 short words or phrases or fewer with emojis.
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { useNavigate, useLocation, useSearchParams, data } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import BingoCard from './components/BingoCard'
 import ShareModal from './components/ShareModal'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -139,7 +139,10 @@ const MainApp = React.memo(() => {
       
       try {
         if (dataParam) {
-          cardData = getCardDataFromUrl()
+          const urlCardData = getCardDataFromUrl()
+          if (urlCardData) {
+            cardData = urlCardData
+          }
         }
       } catch (e) {
         console.error('Error parsing card data from URL:', e)

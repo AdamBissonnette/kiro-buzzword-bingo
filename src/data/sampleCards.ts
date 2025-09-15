@@ -106,6 +106,59 @@ const gameOfThronesTerms = [
   'Ice reference'
 ];
 
+const vibeCodingTerms = [
+  "I think I fixed it",
+"Wait, that didn’t work",
+"All tests passed 🎉",
+"All tests failed 💀",
+"One test is still failing",
+"Let me try a different approach",
+"Copy-paste error again",
+"Why is this undefined?",
+"Forgot a semicolon",
+"Cannot import module",
+"Node command not found",
+"Python environment is broken",
+"Session expired",
+"You're out of credits",
+"Upgrade to continue",
+"Model timed out",
+"Running it again just to be sure",
+"Off by one error",
+"Accidentally deleted everything",
+"Rollback time",
+"Refactor later",
+"Stack Overflow has the same answer",
+"ChatGPT hallucinated that library",
+"Chat GPT thought it was Claude",
+"Ignored prompt and did something random",
+"Forgot to pip install",
+"NPM install fixed it",
+"Yarn vs npm war",
+"Just need to restart the server",
+"Cache issue again",
+"Session too long",
+"Now it compiles",
+"Still doesn’t compile",
+"Tests for the tests",
+"Rubber duck debugging moment",
+"That worked locally",
+"Works on my machine",
+"Why is production different?",
+"Silent error somewhere",
+"Spaghetti code incoming",
+"Magic numbers everywhere",
+"Just add logging",
+"RegEx is the real boss fight",
+"Forgot to save the file",
+"Hot reloading didn’t reload",
+"Why is it so slow?",
+"That’s not deterministic",
+"Async hell again",
+"Let me just Google that",
+"I accidentally deleted your database"
+]
+
 /**
  * Creates a Game of Thrones bingo card with 24 random terms
  * (25 squares total with 1 free space in the center)
@@ -131,14 +184,14 @@ export function createGameOfThronesCard(): CardData {
 
 export function createTechAllHandsCard(): CardData {
   // Shuffle the terms and take the first 24
-  const shuffledTerms = [...techAllHandsTerms].sort(() => Math.random() - 0.5);
+  const shuffledTerms = [...vibeCodingTerms].sort(() => Math.random() - 0.5);
   const selectedTerms = shuffledTerms;
   
   const now = new Date();
 
   return {
     id: `sample_tech_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    title: 'Tech All-Hands Bingo',
+    title: 'Vibe Coding Bingo',
     terms: selectedTerms,
     freeSpaceImage: undefined, // Use icon instead
     freeSpaceIcon: 'star', // Default hollow star icon

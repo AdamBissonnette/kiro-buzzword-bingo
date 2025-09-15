@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { generateShareableUrl } from '../../utils/urlEncoder';
+import { generateShareableUrlSafe } from '../../utils/urlEncoder';
 import { useErrorHandler } from '../../hooks/useErrorHandler';
 import { AppErrorHandler } from '../../utils/errorHandler';
 import type { CardData } from '../../types';
@@ -17,6 +17,8 @@ const ShareModal: React.FC<ShareModalProps> = React.memo(({ cardData, isOpen, on
   const [shareUrl, setShareUrl] = useState('');
   const [copySuccess, setCopySuccess] = useState(false);
   const [shareInPlayMode, setShareInPlayMode] = useState(true);
+  const [urlWarning, setUrlWarning] = useState<string>('');
+  const [urlError, setUrlError] = useState<string>('');
   const urlInputRef = useRef<HTMLInputElement>(null);
 
   const { 
@@ -27,26 +29,33 @@ const ShareModal: React.FC<ShareModalProps> = React.memo(({ cardData, isOpen, on
   } = useErrorHandler();
 
   // Memoize URL generation to prevent unnecessary recalculations
+  const urlResult = useMemo(() => {
+    if (!cardData) return { success: false };
+    return generateShareableUrlSafe(cardData);
+  }, [cardData]);
+
   const generatedUrl = useMemo(() => {
-    if (!cardData) return '';
-    const baseUrl = generateShareableUrl(cardData);
-    return shareInPlayMode ? `${baseUrl}&play=true` : baseUrl;
-  }, [cardData, shareInPlayMode]);
+    if (!urlResult.success || !urlResult.url) return '';
+    return shareInPlayMode ? `${urlResult.url}&play=true` : urlResult.url;
+  }, [urlResult, shareInPlayMode]);
 
   useEffect(() => {
     if (isOpen && cardData) {
       clearError();
       setCopySuccess(false);
       
-      executeWithErrorHandling(
-        async () => {
-          setShareUrl(generatedUrl);
-          return generatedUrl;
-        },
-        AppErrorHandler.handleURLError
-      );
+      // Handle URL generation result
+      if (urlResult.success) {
+        setShareUrl(generatedUrl);
+        setUrlWarning(urlResult.warning || '');
+        setUrlError('');
+      } else {
+        setShareUrl('');
+        setUrlWarning('');
+        setUrlError(urlResult.error || 'Failed to generate share URL');
+      }
     }
-  }, [isOpen, cardData, generatedUrl, clearError, executeWithErrorHandling]);
+  }, [isOpen, cardData, urlResult, generatedUrl, clearError]);
 
   const handleCopyToClipboard = useCallback(async () => {
     if (!shareUrl) return;
@@ -187,44 +196,64 @@ const ShareModal: React.FC<ShareModalProps> = React.memo(({ cardData, isOpen, on
 
           {!isLoading && !error && (
             <>
-              <div className={styles.optionsContainer}>
-                <label className={styles.checkboxLabel}>
-                  <input
-                    type="checkbox"
-                    checked={shareInPlayMode}
-                    onChange={(e) => setShareInPlayMode(e.target.checked)}
-                    className={styles.checkbox}
-                  />
-                  Share in play mode (recommended)
-                </label>
-                <p className={styles.optionDescription}>
-                  {shareInPlayMode 
-                    ? 'Recipients will see the card ready to play with no sidebar controls.'
-                    : 'Recipients will see the full interface with editing controls.'
-                  }
-                </p>
-              </div>
+              {/* Show URL generation error */}
+              {urlError && (
+                <div className={styles.errorMessage}>
+                  <span className={styles.errorIcon}>⚠️</span>
+                  <span>{urlError}</span>
+                </div>
+              )}
 
-              <div className={styles.urlContainer}>
-                <label htmlFor="share-url" className={styles.urlLabel}>
-                  Shareable Link:
-                </label>
-                <input
-                  id="share-url"
-                  ref={urlInputRef}
-                  type="text"
-                  value={shareUrl}
-                  readOnly
-                  className={styles.urlInput}
-                  onClick={(e) => e.currentTarget.select()}
-                />
-                
-                {copySuccess && (
-                  <div className={styles.successMessage}>
-                    ✓ Link copied to clipboard!
+              {/* Show URL generation warning */}
+              {urlWarning && !urlError && (
+                <div className={styles.warningMessage}>
+                  <span className={styles.warningIcon}>⚠️</span>
+                  <span>{urlWarning}</span>
+                </div>
+              )}
+
+              {!urlError && (
+                <>
+                  <div className={styles.optionsContainer}>
+                    <label className={styles.checkboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={shareInPlayMode}
+                        onChange={(e) => setShareInPlayMode(e.target.checked)}
+                        className={styles.checkbox}
+                      />
+                      Share in play mode (recommended)
+                    </label>
+                    <p className={styles.optionDescription}>
+                      {shareInPlayMode 
+                        ? 'Recipients will see the card ready to play with no sidebar controls.'
+                        : 'Recipients will see the full interface with editing controls.'
+                      }
+                    </p>
                   </div>
-                )}
-              </div>
+
+                  <div className={styles.urlContainer}>
+                    <label htmlFor="share-url" className={styles.urlLabel}>
+                      Shareable Link:
+                    </label>
+                    <input
+                      id="share-url"
+                      ref={urlInputRef}
+                      type="text"
+                      value={shareUrl}
+                      readOnly
+                      className={styles.urlInput}
+                      onClick={(e) => e.currentTarget.select()}
+                    />
+                    
+                    {copySuccess && (
+                      <div className={styles.successMessage}>
+                        ✓ Link copied to clipboard!
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </>
           )}
 
