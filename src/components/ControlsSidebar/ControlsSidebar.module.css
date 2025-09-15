@@ -305,6 +305,16 @@
   font-size: 0.9rem;
 }
 
+.variantInput {
+  width: 60px;
+  padding: 0.4rem 0.6rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
 /* Tab Navigation Styles */
 .tabNavigation {
   display: flex;

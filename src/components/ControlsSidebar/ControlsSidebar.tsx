@@ -123,6 +123,11 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
            cardData.terms.length >= 24;
   }, [validationErrors, cardData?.title, cardData?.terms]);
 
+  const tryCastToNumber = (value: string, defaultValue: number): number => {
+    const num = Number(value);
+    return isNaN(num) ? defaultValue : num;
+  }
+
   const handleCreateCard = useCallback(() => {
     if (cardData && isFormValid) {
       onCardCreate({
@@ -244,15 +249,7 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
               <div className={styles.variantControls}>
                 <label className={styles.variantLabel}>
                   Number of Cards:
-                  <select
-                    value={variantCount}
-                    onChange={(e) => onVariantCountChange(Number(e.target.value))}
-                    className={styles.variantSelect}
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                      <option key={num} value={num}>{num}</option>
-                    ))}
-                  </select>
+                  <input type="text" value={variantCount} onChange={(e) => onVariantCountChange(tryCastToNumber(e.target.value, 1))} className={styles.variantInput} />
                 </label>
               </div>
             </div>

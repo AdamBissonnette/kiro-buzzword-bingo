@@ -160,10 +160,6 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
     setTerms(e.target.value);
   }, []);
 
-  const handleFreeSpaceImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFreeSpaceImage(e.target.value);
-  }, []);
-
   const handleIconSelect = useCallback((iconId: string) => {
     setFreeSpaceIcon(iconId);
   }, []);
