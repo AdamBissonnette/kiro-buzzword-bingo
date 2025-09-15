@@ -31,6 +31,7 @@ export function encodeCardData(cardData: CardData): string {
     if (jsonString.length > 8000) { // Conservative limit for URL length
       throw new Error('Card data too large for URL sharing');
     }
+    console.log(jsonString)
     
     // Use btoa for base64 encoding and make it URL-safe
     const base64 = btoa(jsonString);

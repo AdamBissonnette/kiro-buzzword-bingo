@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams, data } from 'react-router-dom'
 import BingoCard from './components/BingoCard'
 import ShareModal from './components/ShareModal'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -135,8 +135,17 @@ const MainApp = React.memo(() => {
     } else {
       // Creator mode - load default card
       setIsPlayMode(false)
-      const sampleCard = createTechAllHandsCard()
-      createCard(sampleCard)
+      let cardData = createTechAllHandsCard()
+      
+      try {
+        if (dataParam) {
+          cardData = getCardDataFromUrl()
+        }
+      } catch (e) {
+        console.error('Error parsing card data from URL:', e)
+      } 
+
+      createCard(cardData)
     }
 
   }, [searchParams, createCard, executeWithErrorHandling]) // Include all dependencies

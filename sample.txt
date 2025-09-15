@@ -1,41 +1,54 @@
-Someone says "My Lady"
-Someone says "My Lord"
-Dragon breathes fire
-Undead dragon breathes... ficre?
-Gendry blacksmiths things
-Cersei drinks
-Tyrion drinks
-Ravens caw
-Sex scene
-Male nudity
-Female nudity
-Sansa broods
-Someone says "Your grace"
-Jon Snow broods
-Valyrian steel / dragon glass mentioned
-"What is dead can never die"
-Azor Ahai
-"The North Remembers"
-A character dies
-A character comes back to life
-Sword practice in the courtyard
-The Lord of Light
-Maester's chain rattles as he walks
-Torture scene
-The mountain says nothing when spoken to
-The hound says nothing when spoken to
-A sword lights on fire
-A wight is killed
-A wight kills someone
-Direwolf attacks
-And now his watch has ended
-Someone takes the black
-The wall is shown
-Bran uses his greenseeing and it's bad
-Bran uses his greenseeing and it's good
-Crypts below winterfell
-A  faceless man cliche
-Onion knight 
-Winter is coming
-Fire reference
-Ice reference
+I think I fixed it
+Wait, that didn’t work
+All tests passed 🎉
+All tests failed 💀
+One test is still failing
+Let me try a different approach
+Copy-paste error again
+Why is this undefined?
+Forgot a semicolon
+Cannot import module
+Node command not found
+Python environment is broken
+Session expired
+You're out of credits
+Upgrade to continue
+Model timed out
+Running it again just to be sure
+Off by one error
+Accidentally deleted everything
+Rollback time
+Refactor later
+Stack Overflow has the same answer
+ChatGPT hallucinated that library
+Chat GPT thought it was Claude
+Ignored prompt and did something random
+Forgot to pip install
+NPM install fixed it
+Yarn vs npm war
+Just need to restart the server
+Cache issue again
+Session too long
+Now it compiles
+Still doesn’t compile
+Tests for the tests
+Rubber duck debugging moment
+That worked locally
+Works on my machine
+Why is production different?
+Silent error somewhere
+Spaghetti code incoming
+Magic numbers everywhere
+Just add logging
+Debugging print statements
+Quick and dirty solution
+Ship it anyway
+Accidentally infinite loop
+RegEx is the real boss fight
+Forgot to save the file
+Hot reloading didn’t reload
+Why is it so slow?
+That’s not deterministic
+Async hell again
+Let me just Google that
+I accidentally deleted your database

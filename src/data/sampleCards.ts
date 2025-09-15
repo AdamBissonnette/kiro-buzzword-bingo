@@ -113,7 +113,7 @@ const gameOfThronesTerms = [
 export function createGameOfThronesCard(): CardData {
   // Shuffle the terms and take the first 24
   const shuffledTerms = [...gameOfThronesTerms].sort(() => Math.random() - 0.5);
-  const selectedTerms = shuffledTerms.slice(0, 24);
+  const selectedTerms = shuffledTerms;
   
   const now = new Date();
   
@@ -132,7 +132,7 @@ export function createGameOfThronesCard(): CardData {
 export function createTechAllHandsCard(): CardData {
   // Shuffle the terms and take the first 24
   const shuffledTerms = [...techAllHandsTerms].sort(() => Math.random() - 0.5);
-  const selectedTerms = shuffledTerms.slice(0, 24);
+  const selectedTerms = shuffledTerms;
   
   const now = new Date();
 

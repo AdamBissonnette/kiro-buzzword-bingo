@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../contexts/hooks';
 import { DabberColorPicker } from '../DabberColorPicker';
+import { ExamplesDropdown } from '../ExamplesDropdown';
 import styles from './Layout.module.css';
 
 interface LayoutProps {
@@ -52,6 +53,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 Buzzword Bingo Generator
               </Link>
             </h1>
+            <ExamplesDropdown />
           </div>
           
           <nav className={styles.nav}>
