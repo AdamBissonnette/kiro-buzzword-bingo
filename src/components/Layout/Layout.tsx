@@ -62,14 +62,14 @@ export const Layout: React.FC<LayoutProps> = ({
                 Create New Card
               </button>
             )}
-            {!isPlayMode && showRemixButton && onRemixCard && (
+            {/* {!isPlayMode && showRemixButton && onRemixCard && (
               <button
                 onClick={onRemixCard}
                 className={styles.remixButton}
               >
                 🔄 Remix This Card
               </button>
-            )}
+            )} */}
             <button
               onClick={toggleTheme}
               className={styles.themeToggle}

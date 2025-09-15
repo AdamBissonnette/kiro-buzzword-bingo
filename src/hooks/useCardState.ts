@@ -19,7 +19,7 @@ interface UseCardStateReturn {
 
 export function useCardState(): UseCardStateReturn {
   const [cardData, setCardData] = useState<CardData | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(true);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   
   // Use optimized variant generation hook

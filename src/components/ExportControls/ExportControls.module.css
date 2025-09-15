@@ -54,6 +54,37 @@
   color: var(--text-primary);
 }
 
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: normal;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.checkboxLabel:hover {
+  color: var(--text-primary);
+}
+
+.checkbox {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.checkboxText {
+  font-size: 0.9rem;
+}
+
+.optionDescription {
+  margin: 0.25rem 0 0 1.5rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
 .slider {
   width: 100%;
   max-width: 200px;
@@ -114,6 +145,7 @@
   justify-content: center;
   gap: 0.5rem;
   min-height: 44px;
+  width: 100%;
 }
 
 .exportButton:hover:not(:disabled) {

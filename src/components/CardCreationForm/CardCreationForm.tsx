@@ -31,11 +31,19 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
 
   // Use ref for timeout to prevent stale closures
   const validationTimeoutRef = useRef<number | null>(null);
-  
+
+  // Update form state when initialData changes
+  useEffect(() => {
+    setTitle(initialData.title || '');
+    setTerms(initialData.terms ? initialData.terms.join('\n') : '');
+    setFreeSpaceImage(initialData.freeSpaceImage || '');
+    setFreeSpaceIcon(initialData.freeSpaceIcon || 'star');
+  }, [initialData]);
+
   // Performance monitoring in development
   const { startMeasure } = usePerformanceMonitor('CardCreationForm');
-  useRenderTracker('CardCreationForm', { 
-    initialData: Object.keys(initialData).length, 
+  useRenderTracker('CardCreationForm', {
+    initialData: Object.keys(initialData).length,
     className,
     title: title.length,
     terms: terms.length,
@@ -43,7 +51,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
     freeSpaceIcon,
     errors: Object.keys(errors).length
   });
-  
+
   React.useLayoutEffect(() => {
     const endMeasure = startMeasure();
     return endMeasure;
@@ -90,7 +98,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
     // Check for duplicate terms
     const uniqueTerms = new Set(termsList.map(term => term.toLowerCase()));
     if (uniqueTerms.size !== termsList.length) {
-      newErrors.terms = newErrors.terms 
+      newErrors.terms = newErrors.terms
         ? `${newErrors.terms} Also, some terms are duplicated.`
         : 'Some terms are duplicated. Each term should be unique.';
     }
@@ -157,7 +165,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
   return (
     <div className={`${styles.cardCreationForm} ${className}`}>
       <h3 className={styles.heading}>Card Details</h3>
-      
+
       <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
         {/* Title Input */}
         <div className={styles.formGroup}>
@@ -185,7 +193,7 @@ const CardCreationForm: React.FC<CardCreationFormProps> = React.memo(({
         {/* Terms Textarea */}
         <div className={styles.formGroup}>
           <label htmlFor="card-terms" className={styles.label}>
-            Bingo Terms * 
+            Bingo Terms *
             <span className={styles.termCount}>
               ({termCount}/24 minimum)
             </span>

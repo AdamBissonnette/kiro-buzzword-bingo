@@ -29,7 +29,8 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
   const [exportOptions, setExportOptions] = useState<PDFExportOptions>({
     format: 'a4',
     orientation: 'portrait',
-    quality: 1.0
+    quality: 1.0,
+    blackAndWhite: true
   });
   const [exportProgress, setExportProgress] = useState<PDFExportProgress | null>(null);
   const [showProgressModal, setShowProgressModal] = useState(false);
@@ -85,10 +86,9 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
     };
 
     try {
-      // Use automatic card element detection if container is provided and cardElements are not
-      if (container && (!cardElements || cardElements.length === 0)) {
-        await PDFExporter.exportCardsFromContainer(
-          container,
+      // For multiple variants, we need to handle the case where only one card element is visible
+      if (variantCount > 1) {
+        await exportMultipleVariants(
           cards,
           filename,
           exportOptions,
@@ -96,44 +96,29 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
           controller
         );
       } else {
-        // Fallback to legacy method with provided cardElements
-        if (!cardElements || cardElements.length === 0) {
-          throw AppErrorHandler.createError(
-            'PDF_EXPORT_ERROR',
-            'Card element not found',
-            'The card content is not available for export. Please ensure the card is properly loaded and try again.',
-            false
+        // Single card export
+        // Use automatic card element detection if container is provided and cardElements are not
+        if (container && (!cardElements || cardElements.length === 0)) {
+          await PDFExporter.exportCardsFromContainer(
+            container,
+            cards,
+            filename,
+            exportOptions,
+            progressHandler,
+            controller
           );
-        }
-
-        // For single card export
-        if (variantCount === 1) {
-          await PDFExporter.exportCard(cardElements[0], filename, exportOptions, progressHandler, controller);
         } else {
-          // For multiple cards
-          if (cardElements.length >= variantCount) {
-            // We have multiple card elements (variants are being displayed)
-            await PDFExporter.exportMultipleCards(
-              cardElements.slice(0, variantCount), 
-              filename, 
-              exportOptions,
-              progressHandler,
-              controller
-            );
-          } else {
-            // We need to generate variants for export
-            // This happens when user wants multiple cards but variants aren't displayed
-            // We'll export the single visible card multiple times with different arrangements
-            // This is a limitation but works for the current use case
-            const elementsToExport = Array(variantCount).fill(cardElements[0]);
-            await PDFExporter.exportMultipleCards(
-              elementsToExport, 
-              filename, 
-              exportOptions,
-              progressHandler,
-              controller
+          // Fallback to legacy method with provided cardElements
+          if (!cardElements || cardElements.length === 0) {
+            throw AppErrorHandler.createError(
+              'PDF_EXPORT_ERROR',
+              'Card element not found',
+              'The card content is not available for export. Please ensure the card is properly loaded and try again.',
+              false
             );
           }
+
+          await PDFExporter.exportCard(cardElements[0], filename, exportOptions, progressHandler, controller);
         }
       }
 
@@ -200,6 +185,102 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
     setExportOptions(prev => ({ ...prev, quality }));
   }, []);
 
+  const handleBlackAndWhiteChange = useCallback((blackAndWhite: boolean) => {
+    setExportOptions(prev => ({ ...prev, blackAndWhite }));
+  }, []);
+
+  // Method to export multiple variants by temporarily rendering them
+  const exportMultipleVariants = useCallback(async (
+    cards: CardData[],
+    filename: string,
+    exportOptions: PDFExportOptions,
+    progressHandler: (progress: PDFExportProgress) => void,
+    controller: PDFExportController
+  ) => {
+    // Import the card generator to create variants
+    const { generateCardVariants } = await import('../../utils/cardGenerator');
+    
+    if (cards.length === 0) {
+      throw new Error('No card data provided for variant export');
+    }
+
+    const baseCard = cards[0];
+    
+    // Generate the variants
+    progressHandler({ 
+      current: 0, 
+      total: variantCount, 
+      stage: 'validation', 
+      message: 'Generating card variants for export...' 
+    });
+
+    const variants = generateCardVariants(baseCard, variantCount);
+    
+    // Create a temporary container to render all variants for export
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.top = '-9999px';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.visibility = 'hidden';
+    tempContainer.style.pointerEvents = 'none';
+    document.body.appendChild(tempContainer);
+
+    try {
+      // Dynamically import React and ReactDOM for rendering
+      const React = await import('react');
+      const { createRoot } = await import('react-dom/client');
+      const { default: BingoCard } = await import('../BingoCard/BingoCard');
+
+      // Create a wrapper component to render all variants
+      const VariantsExportWrapper = () => {
+        return React.createElement('div', {}, 
+          variants.map((variant, index) => 
+            React.createElement(BingoCard, {
+              key: index,
+              title: variant.title,
+              terms: variant.terms,
+              freeSpaceImage: variant.freeSpaceImage,
+              freeSpaceIcon: variant.freeSpaceIcon,
+              arrangement: variant.arrangement,
+              isPlayMode: false
+            })
+          )
+        );
+      };
+
+      // Render the variants
+      const root = createRoot(tempContainer);
+      
+      await new Promise<void>((resolve) => {
+        root.render(React.createElement(VariantsExportWrapper));
+        // Wait for rendering to complete
+        setTimeout(resolve, 100);
+      });
+
+      // Wait a bit more for all elements to be fully rendered
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Now export using the temporary container
+      await PDFExporter.exportCardsFromContainer(
+        tempContainer,
+        variants.map(v => ({ ...v, id: `temp-${Date.now()}`, createdAt: new Date(), updatedAt: new Date() })),
+        filename,
+        exportOptions,
+        progressHandler,
+        controller
+      );
+
+      // Cleanup
+      root.unmount();
+      
+    } finally {
+      // Always remove the temporary container
+      if (tempContainer.parentNode) {
+        tempContainer.parentNode.removeChild(tempContainer);
+      }
+    }
+  }, [variantCount]);
+
   const isDisabled = useMemo(() => 
     cards.length === 0 || isLoading || 
     (!container && (!cardElements || cardElements.length === 0)),
@@ -208,11 +289,10 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
 
   return (
     <>
-      <div className={styles.exportControls}>
-        <h3 className={styles.title}>Export to PDF</h3>
+      <div>
         
-        <div className={styles.options}>
-          <div className={styles.optionGroup}>
+        {/* <div className={styles.options}> */}
+          {/* <div className={styles.optionGroup}>
             <label className={styles.label}>Paper Size:</label>
             <div className={styles.radioGroup}>
               <label className={styles.radioLabel}>
@@ -238,9 +318,9 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
                 Letter
               </label>
             </div>
-          </div>
+          </div> */}
 
-          <div className={styles.optionGroup}>
+          {/* <div className={styles.optionGroup}>
             <label className={styles.label}>Orientation:</label>
             <div className={styles.radioGroup}>
               <label className={styles.radioLabel}>
@@ -265,10 +345,10 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
                 />
                 Landscape
               </label>
-            </div>
-          </div>
+            </div> */}
+          {/* </div> */}
 
-          <div className={styles.optionGroup}>
+          {/* <div className={styles.optionGroup}>
             <label className={styles.label} htmlFor="quality">
               Quality: {Math.round((exportOptions.quality ?? 0.8) * 100)}%
             </label>
@@ -283,17 +363,35 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
               disabled={isLoading}
               className={styles.slider}
             />
-          </div>
-        </div>
+          </div> */}
 
-        <div className={styles.exportInfo}>
+          {/* <div className={styles.optionGroup}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={exportOptions.blackAndWhite ?? false}
+                onChange={(e) => handleBlackAndWhiteChange(e.target.checked)}
+                disabled={isLoading}
+                className={styles.checkbox}
+              />
+              <span className={styles.checkboxText}>
+                Black & White (saves ink)
+              </span>
+            </label>
+            <p className={styles.optionDescription}>
+              Removes colors and gradients for ink-efficient printing
+            </p>
+          </div>
+        </div> */}
+
+        {/* <div className={styles.exportInfo}>
           <p className={styles.cardCount}>
             {variantCount === 1 
               ? '1 card will be exported' 
               : `${variantCount} cards will be exported (${variantCount} pages)`
             }
           </p>
-        </div>
+        </div> */}
 
         {showSuccessMessage && (
           <div className={styles.successMessage}>
@@ -307,7 +405,7 @@ export const ExportControls: React.FC<ExportControlsProps> = React.memo(({
           disabled={isDisabled}
           className={`${styles.exportButton} ${isLoading ? styles.exporting : ''}`}
         >
-          {isLoading ? 'Generating PDF...' : 'Export PDF'}
+          {isLoading ? 'Generating...' : 'Export'}
         </button>
 
         {!PDFExporter.isSupported() && (

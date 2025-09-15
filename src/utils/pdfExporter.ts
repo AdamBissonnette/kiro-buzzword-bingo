@@ -12,6 +12,7 @@ export interface PDFExportOptions {
   enableLogging?: boolean;
   maxRetries?: number;
   retryDelay?: number;
+  blackAndWhite?: boolean;
 }
 
 export interface PDFExportProgress {
@@ -48,7 +49,8 @@ export class PDFExporter {
     margin: 20,
     enableLogging: false,
     maxRetries: 3,
-    retryDelay: 1000
+    retryDelay: 1000,
+    blackAndWhite: false
   };
 
   private static readonly CANVAS_CLEANUP_TIMEOUT = 5000; // 5 seconds
@@ -74,6 +76,113 @@ export class PDFExporter {
       console.error(`[PDFExporter] ${message}`, data);
     }
   };
+
+  /**
+   * Applies black and white styles to the cloned document for ink-saving PDF export
+   */
+  private static applyBlackAndWhiteStyles(clonedDoc: Document): void {
+    this.logger.debug('Applying black and white styles for ink-saving export');
+    
+    // Create a style element with black and white CSS
+    const style = clonedDoc.createElement('style');
+    style.textContent = `
+      /* Force all text to black */
+      * {
+        color: #000000 !important;
+        text-shadow: none !important;
+      }
+      
+      /* Remove all background colors and gradients */
+      * {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        background-gradient: none !important;
+      }
+      
+      /* Convert borders to black */
+      * {
+        border-color: #000000 !important;
+      }
+      
+      /* Remove box shadows */
+      * {
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+      }
+      
+      /* Ensure card container has white background */
+      [data-card-element], .bingo-card, .card {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+      }
+      
+      /* Make sure squares have black borders and white backgrounds */
+      .bingo-square, .square, [class*="square"] {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        border: 1px solid #000000 !important;
+        color: #000000 !important;
+      }
+      
+      /* Handle marked/selected squares with a simple pattern */
+      .bingo-square.marked, .square.marked, .bingo-square.selected, .square.selected,
+      [class*="square"].marked, [class*="square"].selected {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        position: relative;
+      }
+      
+      /* Add a simple X pattern for marked squares instead of colors */
+      .bingo-square.marked::before, .square.marked::before, .bingo-square.selected::before, .square.selected::before,
+      [class*="square"].marked::before, [class*="square"].selected::before {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #000000 !important;
+        z-index: 10;
+      }
+      
+      /* Remove any hover effects */
+      *:hover {
+        background: inherit !important;
+        color: inherit !important;
+        box-shadow: none !important;
+      }
+      
+      /* Ensure icons are black */
+      .icon, [class*="icon"], svg {
+        color: #000000 !important;
+        fill: #000000 !important;
+        stroke: #000000 !important;
+      }
+      
+      /* Remove any filter effects */
+      * {
+        filter: none !important;
+        -webkit-filter: none !important;
+      }
+    `;
+    
+    // Add the style to the document head
+    const head = clonedDoc.head || clonedDoc.getElementsByTagName('head')[0];
+    if (head) {
+      head.appendChild(style);
+    } else {
+      // If no head, try to add to the beginning of the document
+      const firstElement = clonedDoc.body?.firstChild || clonedDoc.documentElement?.firstChild;
+      if (firstElement) {
+        clonedDoc.insertBefore(style, firstElement);
+      }
+    }
+    
+    this.logger.debug('Black and white styles applied successfully');
+  }
 
   /**
    * Validates a DOM element before PDF export (legacy method - use CardElementDetector for new code)
@@ -303,6 +412,11 @@ export class PDFExporter {
         const clonedElement = clonedDoc.querySelector('[data-card-element]');
         if (clonedElement) {
           (clonedElement as HTMLElement).style.fontFamily = 'Arial, sans-serif';
+        }
+        
+        // Apply black and white styles for ink-saving PDF export
+        if (options.blackAndWhite) {
+          this.applyBlackAndWhiteStyles(clonedDoc);
         }
       }
     });

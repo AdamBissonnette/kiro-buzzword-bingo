@@ -66,14 +66,13 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
   }
   const [exportMessage, setExportMessage] = useState<string>('');
   const [exportMessageType, setExportMessageType] = useState<'success' | 'error'>('success');
-  const [activeTab, setActiveTab] = useState<'create' | 'manage'>('create');
-  
+  const [activeTab, setActiveTab] = useState<'manage' | 'create'>('manage');
+
   // Get card context for validation and editing state
   const { 
     validationErrors, 
     isEditing,
-    setEditingMode,
-    clearCard
+    setEditingMode
   } = useCardContext();
 
   const handleExportStart = useCallback(() => {
@@ -103,11 +102,30 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
     console.debug('Validation errors updated:', errors);
   }, []);
 
-  const handleCreateNewCard = useCallback(() => {
-    clearCard();
+  // const handleCreateNewCard = useCallback(() => {
+  //   clearCard();
+  //   setEditingMode(true);
+  //   setActiveTab('create');
+  // }, [clearCard, setEditingMode]);
+
+  const handleClearCard = useCallback(() => {
+    // Create a new empty card with default values
+    const defaultCard: CardData = {
+      id: crypto.randomUUID(),
+      title: '',
+      terms: [],
+      freeSpaceImage: '',
+      freeSpaceIcon: 'star',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    // Update the card data with default values
+    onCardDataChange(defaultCard);
+    
+    // Set editing mode to true so user can start creating
     setEditingMode(true);
-    setActiveTab('create');
-  }, [clearCard, setEditingMode]);
+  }, [onCardDataChange, setEditingMode]);
 
   const handleEditCurrentCard = useCallback(() => {
     if (cardData) {
@@ -147,14 +165,15 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
             onClick={() => setActiveTab('create')}
             className={`${styles.tabButton} ${activeTab === 'create' ? styles.tabButtonActive : ''}`}
           >
-            {isEditing ? '✏️ Edit Card' : '➕ Create Card'}
+            ✏️ Edit
+            {/* {isEditing ? '✏️ Edit' : '➕ Create Card'} */}
           </button>
           <button
             onClick={() => setActiveTab('manage')}
             className={`${styles.tabButton} ${activeTab === 'manage' ? styles.tabButtonActive : ''}`}
             disabled={!cardData}
           >
-            ⚙️ Manage Card
+            ⚙️ Manage
           </button>
         </div>
       </div>
@@ -186,7 +205,15 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
               disabled={!isFormValid}
               className={`${styles.button} ${styles.buttonPrimary} ${!isFormValid ? styles.buttonDisabled : ''}`}
             >
-              {isEditing ? 'Update Card' : 'Create Card'}
+              Update Card
+              {/* {isEditing ? 'Update Card' : 'Create Card'} */}
+            </button>
+            <button
+              onClick={handleClearCard}
+              className={`${styles.button} ${styles.buttonDanger}`}
+            >
+              Clear Card
+              {/* {isEditing ? 'Update Card' : 'Create Card'} */}
             </button>
           </div>
         </div>
@@ -221,27 +248,11 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
             <h3 className={styles.sectionTitle}>Card Actions</h3>
 
             <button
-              onClick={handleCreateNewCard}
-              className={`${styles.button} ${styles.buttonSecondary}`}
-            >
-              ➕ Create New Card
-            </button>
-
-            <button
               onClick={handleEditCurrentCard}
               className={`${styles.button} ${styles.buttonInfo}`}
             >
               ✏️ Edit This Card
             </button>
-
-            {onRemixCard && (
-              <button
-                onClick={onRemixCard}
-                className={`${styles.button} ${styles.buttonPrimary}`}
-              >
-                🔄 Remix This Card
-              </button>
-            )}
 
             {onRandomizeCard && (
               <button

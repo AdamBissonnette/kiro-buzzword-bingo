@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Sharing</title>
+</head>
+<body>
+    <h1>Test Sharing Functionality</h1>
+    <div id="result"></div>
+    
+    <script type="module">
+        // Simulate the URL encoding/decoding functionality
+        function encodeCardData(cardData) {
+            const jsonString = JSON.stringify(cardData);
+            const base64 = btoa(jsonString);
+            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        }
+        
+        function decodeCardData(encodedData) {
+            let base64 = encodedData.replace(/-/g, '+').replace(/_/g, '/');
+            while (base64.length % 4) {
+                base64 += '=';
+            }
+            const jsonString = atob(base64);
+            return JSON.parse(jsonString);
+        }
+        
+        // Test data
+        const testCard = {
+            title: "Test Bingo Card",
+            terms: [
+                "synergy", "paradigm", "leverage", "optimize", "streamline",
+                "innovative", "disruptive", "scalable", "agile", "robust",
+                "seamless", "cutting-edge", "best-practice", "game-changer", "value-add",
+                "low-hanging-fruit", "circle-back", "touch-base", "deep-dive", "pivot",
+                "bandwidth", "deliverable", "actionable", "holistic"
+            ],
+            freeSpaceIcon: "star"
+        };
+        
+        try {
+            // Test encoding
+            const encoded = encodeCardData(testCard);
+            console.log('Encoded:', encoded);
+            
+            // Test decoding
+            const decoded = decodeCardData(encoded);
+            console.log('Decoded:', decoded);
+            
+            // Test URL generation
+            const shareUrl = `${window.location.origin}${window.location.pathname}?play=true&data=${encoded}`;
+            console.log('Share URL:', shareUrl);
+            
+            // Display results
+            document.getElementById('result').innerHTML = `
+                <h2>✅ Sharing Test Successful!</h2>
+                <p><strong>Original card title:</strong> ${testCard.title}</p>
+                <p><strong>Decoded card title:</strong> ${decoded.title}</p>
+                <p><strong>Terms match:</strong> ${JSON.stringify(testCard.terms) === JSON.stringify(decoded.terms) ? 'Yes' : 'No'}</p>
+                <p><strong>Share URL:</strong> <a href="${shareUrl}" target="_blank">${shareUrl}</a></p>
+            `;
+        } catch (error) {
+            document.getElementById('result').innerHTML = `
+                <h2>❌ Sharing Test Failed!</h2>
+                <p><strong>Error:</strong> ${error.message}</p>
+            `;
+            console.error('Test failed:', error);
+        }
+    </script>
+</body>
+</html>

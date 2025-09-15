@@ -136,20 +136,16 @@
   - Add performance monitoring and debugging tools
   - _Requirements: 6.2_
 
-## Phase 7: Testing and Quality Assurance
+## Phase 7: Quality Assurance
 
-- [ ] 19. Update existing tests for refactored components
-  - Modify tests for ControlsSidebar to include new functionality
-  - Update App component tests for new architecture
-  - Fix broken tests due to component removal and refactoring
-  - Add new test cases for edge cases and error scenarios
+- [ ] 19. Review Share Functionality
+  - Address error on loading from a share state: Error: Rendered fewer hooks than expected. This may be caused by an accidental early return statement.
+_c<@http://localhost:5174/src/App.tsx:38:55
+  - Ensure that share functionality is working to generate Base64 encoded card states
   - _Requirements: 5.5_
 
-- [ ] 20. Create comprehensive integration tests
-  - Test complete card creation workflow from form to preview
-  - Test multiple card generation and display functionality
-  - Test PDF export process with various card configurations
-  - Test responsive design and mobile functionality
+- [x] 20. Hookup "Clear Card functionality"
+  - Update the "handleClearCard" function in ControlSidebar to reset the values for title, terms, free space image / icon to their default states
   - _Requirements: 5.5, 6.5_
 
 - [ ] 21. Implement end-to-end testing
