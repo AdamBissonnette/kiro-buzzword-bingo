@@ -42,7 +42,6 @@ export const ControlsSidebar: React.FC<ControlsSidebarProps> = React.memo(({
   onToggleVariants,
   onShare = defaultProps.onShare,
   onRandomizeCard = defaultProps.onRandomizeCard,
-  onRemixCard = defaultProps.onRemixCard,
   cardElements = defaultProps.cardElements!,
   container
 }) => {
